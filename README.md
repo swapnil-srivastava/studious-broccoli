@@ -10,10 +10,27 @@ Deployed with Vercel. Give it a spin!
 
 ## Setup
 
-1. Clone repo
-2. `npm install`
-4. `npm run dev`
-5. Go to `http://localhost:3000`
+### 1. Clone the repo
+
+Clone repo [https://github.com/swapnil-srivastava/studious-broccoli.git](https://github.com/swapnil-srivastava/studious-broccoli.git)
+
+### 2. Install Dependencies 
+
+Make sure to install the dependencies:
+
+```bash
+# npm
+npm run dev
+```
+
+### 2. Development Server
+
+Start the development server on `http://localhost:3000`:
+
+```bash
+# npm
+npm run dev
+```
 
 ## Tech
 
@@ -49,80 +66,3 @@ Deployed with Vercel. Give it a spin!
 ## Notes
 
 Made this in 8 hours. Lots to improve but it works. Main focus was on functionality over polish. Used Tailwind for quick styling.
-
-
-# Nuxt 3 Minimal Starter
-
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
-## Setup
-
-Make sure to install the dependencies:
-
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
