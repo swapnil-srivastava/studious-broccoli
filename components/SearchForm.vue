@@ -1,14 +1,14 @@
 <template>
   <form @submit.prevent="handleSubmit" class="bg-white shadow-md rounded px-4 sm:px-8 pt-6 pb-8 mb-4">
     <div class="mb-4">
-      <label for="language" class="block text-gray-700 text-sm font-bold mb-2">Programming Language</label>
+      <label for="language" class="block text-gray-700 text-sm font-bold mb-2">Programming Languages</label>
       <div class="relative">
         <input
           v-model="languageInput"
           @input="filterLanguages"
           type="text"
           id="language"
-          placeholder="Search for a language"
+          placeholder="Search for languages"
           class="block w-full bg-white border border-gray-300 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
         <div v-if="filteredLanguages.length > 0" class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg">
@@ -26,11 +26,15 @@
       </div>
     </div>
 
-    <div v-if="selectedLanguage" class="mb-4">
-      <div class="inline-flex items-center bg-blue-100 rounded-full px-3 py-1 text-sm font-semibold text-blue-700">
-        {{ selectedLanguage }}
+    <div v-if="selectedLanguages.length > 0" class="mb-4 flex flex-wrap gap-2">
+      <div 
+        v-for="lang in selectedLanguages" 
+        :key="lang"
+        class="inline-flex items-center bg-blue-100 rounded-full px-3 py-1 text-sm font-semibold text-blue-700"
+      >
+        {{ lang }}
         <button 
-          @click="removeLanguage" 
+          @click="removeLanguage(lang)" 
           type="button"
           class="ml-2 focus:outline-none"
         >
@@ -90,7 +94,7 @@ import { ref, computed } from 'vue'
 const languages = ['JavaScript', 'Python', 'Java', 'TypeScript', 'C++', 'Ruby', 'Go', 'PHP']
 
 const languageInput = ref('')
-const selectedLanguage = ref('')
+const selectedLanguages = ref<string[]>([])
 const startDate = ref('')
 const endDate = ref('')
 const minStars = ref(0)
@@ -100,26 +104,29 @@ const emit = defineEmits(['search'])
 const filteredLanguages = computed(() => {
   if (!languageInput.value) return []
   const lowercaseInput = languageInput.value.toLowerCase()
-  return languages.filter(lang => lang.toLowerCase().includes(lowercaseInput))
+  return languages.filter(lang => 
+    lang.toLowerCase().includes(lowercaseInput) && !selectedLanguages.value.includes(lang)
+  )
 })
 
 const filterLanguages = () => {
-  selectedLanguage.value = ''
+  // This function can be left empty or used for additional filtering logic
 }
 
 const selectLanguage = (lang: string) => {
-  selectedLanguage.value = lang
+  if (!selectedLanguages.value.includes(lang)) {
+    selectedLanguages.value.push(lang)
+  }
   languageInput.value = ''
 }
 
-const removeLanguage = () => {
-  selectedLanguage.value = ''
-  languageInput.value = ''
+const removeLanguage = (lang: string) => {
+  selectedLanguages.value = selectedLanguages.value.filter(l => l !== lang)
 }
 
 const handleSubmit = () => {
   emit('search', {
-    language: selectedLanguage.value,
+    languages: selectedLanguages.value,
     startDate: startDate.value,
     endDate: endDate.value,
     minStars: minStars.value
