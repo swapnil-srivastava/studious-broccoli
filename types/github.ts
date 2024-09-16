@@ -8,18 +8,18 @@ export interface Repository {
     created_at: string;
   }
   
-export interface GithubState {
+  export interface SearchParams {
+    languages: string[];
+    startDate: string;
+    endDate: string;
+    minStars: number;
+  }
+  
+  export interface GithubState {
     repositories: Record<string, Repository[]>;
     searchedLanguages: string[];
     loading: boolean;
     error: string | null;
     currentPage: Record<string, number | null>;
     lastSearchParams: SearchParams;
-}
-  
-export interface SearchParams {
-    languages: string[];
-    startDate: string;
-    endDate: string;
-    minStars: number;
-}
+  }

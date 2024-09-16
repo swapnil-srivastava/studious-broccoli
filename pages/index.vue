@@ -11,7 +11,7 @@
       </div>
       <RepositoryList
         v-if="githubStore.repositories && Object.keys(githubStore.repositories).length > 0"
-        :repositories="githubStore.repositories" 
+        :repositories="githubStore.repositories"
         :languages="githubStore.searchedLanguages"
         @loadMore="handleLoadMore"
       />
