@@ -1,13 +1,26 @@
 <template>
-  <div class="bg-white shadow-lg rounded-lg p-6">
-    <h2 class="text-2xl font-bold mb-4 text-gray-800">{{ language }}</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div v-for="repo in repositories" :key="repo.id" class="bg-white border rounded-lg shadow-md hover:shadow-xl transition duration-300 ease-in-out">
+  <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
+    <h2 class="text-2xl font-bold mb-4 text-gray-800">Search Results</h2>
+    <div v-if="repositories.length === 0" class="text-gray-600">
+      No repositories found matching your criteria.
+    </div>
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div 
+        v-for="repo in repositories" 
+        :key="repo.id" 
+        class="bg-white border rounded-lg shadow-md hover:shadow-xl transition duration-300 ease-in-out"
+      >
         <div class="p-4">
-          <a :href="repo.html_url" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 hover:underline">
+          <a 
+            :href="repo.html_url" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="text-blue-600 hover:text-blue-800 hover:underline"
+          >
             <h3 class="text-lg font-semibold mb-2">{{ repo.name }}</h3>
           </a>
-          <p class="text-gray-600 text-sm mb-4">{{ repo.description }}</p>
+          <p class="text-gray-600 text-sm mb-2">{{ repo.description }}</p>
+          <p class="text-sm text-gray-500 mb-2">Language: {{ repo.language }}</p>
           <div class="flex justify-between items-center text-sm text-gray-500">
             <span class="flex items-center">
               <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -24,15 +37,17 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+interface Repository {
+  id: number
+  name: string
+  html_url: string
+  description: string
   language: string
-  repositories: Array<{
-    id: number
-    name: string
-    html_url: string
-    description: string
-    stargazers_count: number
-    created_at: string
-  }>
+  stargazers_count: number
+  created_at: string
+}
+
+defineProps<{
+  repositories: Repository[]
 }>()
 </script>
