@@ -5,8 +5,15 @@ export default defineNuxtConfig({
   typescript: {
     strict: true
   },
-  css: ['~/assets/css/tailwind.css'],
+  css: ['~/assets/css/main.css'],
   modules: [
     '@pinia/nuxt',
+    '@nuxtjs/tailwindcss'
   ],
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
 })
