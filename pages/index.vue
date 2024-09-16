@@ -6,7 +6,11 @@
       <span class="animate-spin inline-block mr-2">⌛</span> Loading...
     </div>
     <div v-else-if="githubStore.error">{{ githubStore.error }}</div>
-    <RepositoryList v-else :repositories="githubStore.repositories" />
+      <RepositoryList v-else
+        :repositories="githubStore.repositories" 
+        :languages="githubStore.searchedLanguages"
+        @loadMore="handleLoadMore"
+      />
   </div>
 </template>
 
@@ -16,8 +20,11 @@ import type { SearchParams } from '~/stores/github'
 
 const githubStore = useGithubStore()
 
-// Add type annotation to the searchParams parameter
 const handleSearch = (searchParams: SearchParams) => {
   githubStore.searchRepositories(searchParams)
+}
+
+const handleLoadMore = (language: string) => {
+  githubStore.loadMoreRepositories(language)
 }
 </script>
