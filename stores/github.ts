@@ -65,7 +65,7 @@ export const useGithubStore = defineStore('github', {
           }))
         )
 
-        // TODO : Sort the combined results by star count in descending order
+        // Sort the combined results by star count in descending order
         this.repositories.sort((a, b) => b.stargazers_count - a.stargazers_count)
 
       } catch (error) {
