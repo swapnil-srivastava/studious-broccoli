@@ -1,29 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-
-export interface SearchParams {
-  languages: string[]
-  startDate: string
-  endDate: string
-  minStars: number
-}
-
-interface Repository {
-  id: number
-  name: string
-  html_url: string
-  description: string
-  stargazers_count: number
-}
-
-interface GithubState {
-  repositories: Record<string, Repository[]>
-  searchedLanguages: string[]
-  loading: boolean
-  error: string | null
-  currentPage: Record<string, number | null>  // Allow null values
-  lastSearchParams: SearchParams
-}
+import type { GithubState, SearchParams } from '../types/github';
 
 export const useGithubStore = defineStore('github', {
   state: (): GithubState => ({
