@@ -1,17 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
-interface Repository {
-  id: number
-  name: string
-  full_name: string
-  html_url: string
-  description: string
-  language: string
-  stargazers_count: number
-  created_at: string
-}
-
 export interface SearchParams {
   languages: string[]
   startDate: string
@@ -19,60 +8,95 @@ export interface SearchParams {
   minStars: number
 }
 
+interface Repository {
+  id: number
+  name: string
+  html_url: string
+  description: string
+  stargazers_count: number
+}
+
 interface GithubState {
-  repositories: Repository[]
+  repositories: Record<string, Repository[]>
+  searchedLanguages: string[]
   loading: boolean
   error: string | null
+  currentPage: Record<string, number | null>  // Allow null values
+  lastSearchParams: SearchParams
 }
 
 export const useGithubStore = defineStore('github', {
   state: (): GithubState => ({
-    repositories: [],
+    repositories: {},
+    searchedLanguages: [],
     loading: false,
-    error: null
+    error: null,
+    currentPage: {},
+    lastSearchParams: {
+      languages: [],
+      startDate: '',
+      endDate: '',
+      minStars: 0
+    }
   }),
   actions: {
     async searchRepositories(params: SearchParams) {
       this.loading = true
       this.error = null
-      this.repositories = []
+      this.repositories = {}
+      this.searchedLanguages = params.languages
+      this.currentPage = {}
+      this.lastSearchParams = { ...params }
 
       try {
-        
-        const promises = params.languages.map(language =>
-          axios.get('https://api.github.com/search/repositories', {
-            params: {
-              q: `language:${language} created:${params.startDate}..${params.endDate} stars:>=${params.minStars}`,
-              sort: 'stars',
-              order: 'desc',
-              per_page: 100 // Adjust this value as needed
-            }
-          })
-        )
-
-        const responses = await Promise.all(promises)
-        
-        this.repositories = responses.flatMap(response => 
-          response.data.items.map((item: any) => ({
-            id: item.id,
-            name: item.name,
-            full_name: item.full_name,
-            html_url: item.html_url,
-            description: item.description,
-            language: item.language,
-            stargazers_count: item.stargazers_count,
-            created_at: item.created_at
-          }))
-        )
-
-        // Sort the combined results by star count in descending order
-        this.repositories.sort((a, b) => b.stargazers_count - a.stargazers_count)
-
+        await Promise.all(params.languages.map(language => this.fetchRepositories(language, params)))
       } catch (error) {
         this.error = 'An error occurred while fetching repositories'
         console.error(error)
       } finally {
         this.loading = false
+      }
+    },
+    async loadMoreRepositories(language: string) {
+      if (!this.currentPage[language]) return
+
+      if (this.currentPage[language] !== null) {
+        await this.fetchRepositories(language, this.lastSearchParams)
+      }
+
+      this.currentPage[language]++
+      await this.fetchRepositories(language, {
+        languages: [language],
+        startDate: this.lastSearchParams.startDate,
+        endDate: this.lastSearchParams.endDate,
+        minStars: this.lastSearchParams.minStars
+      })
+    },
+    async fetchRepositories(language: string, params: SearchParams) {
+      try {
+        const response = await axios.get('https://api.github.com/search/repositories', {
+          params: {
+            q: `language:${language} created:${params.startDate}..${params.endDate} stars:>=${params.minStars}`,
+            sort: 'stars',
+            order: 'desc',
+            page: this.currentPage[language] || 1,
+            per_page: 30
+          }
+        })
+    
+        if (!this.repositories[language]) {
+          this.repositories[language] = []
+        }
+        this.repositories[language].push(...response.data.items)
+    
+        // If no more results, set currentPage to null to prevent further loading
+        if (response.data.items.length === 0) {
+          this.currentPage[language] = null;
+        } else {
+          this.currentPage[language] = (this.currentPage[language] || 0) + 1
+        }
+      } catch (error) {
+        console.error(`Error fetching repositories for ${language}:`, error)
       }
     }
   }
