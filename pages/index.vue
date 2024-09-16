@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { useGithubStore } from '~/stores/github'
-import type { SearchParams } from '~/stores/github'
+import type { SearchParams } from '../types/github';
 
 const githubStore = useGithubStore()
 
