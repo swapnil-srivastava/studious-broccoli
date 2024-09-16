@@ -47,26 +47,18 @@
 <script setup lang="ts">
 import { ref, defineProps, defineEmits } from 'vue'
 
-interface Repository {
-  id: number
-  name: string
-  html_url: string
-  description: string
-  stargazers_count: number
-  created_at: string
-}
+import type { Repository } from '../types/github';
 
 const props = defineProps<{
-  repositories: Record<string, Repository[]>
-  languages: string[]
-}>()
+  repositories: Record<string, Repository[]>;
+  languages: string[];
+}>();
 
 const emit = defineEmits(['loadMore'])
 
 const loading = ref<Record<string, boolean>>({})
 
 const hasMoreRepos = (language: string) => {
-  // This is a placeholder. You should implement logic to determine if there are more repos to load.
   return true
 }
 
