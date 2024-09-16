@@ -65,4 +65,4 @@ npm run dev
 
 ## Notes
 
-Made this in 8 hours. Lots to improve but it works. Main focus was on functionality over polish. Used Tailwind for quick styling.
+Lots to improve but it works. Main focus was on functionality over polish. Used Tailwind for quick styling.
