@@ -52,7 +52,7 @@
         <input 
           v-model="startDate" 
           type="date" 
-          id="startDate" 
+          id="startDate"
           class="block w-full bg-white border border-gray-300 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
       </div>
@@ -65,6 +65,10 @@
           class="block w-full bg-white border border-gray-300 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
       </div>
+    </div>
+
+    <div v-if="errorMessage" class="mt-6 mb-4 p-4 bg-red-100 rounded-lg text-red-500">
+      {{ errorMessage }}
     </div>
 
     <div class="mb-6">
@@ -99,8 +103,25 @@ const selectedLanguages = ref<string[]>([])
 const startDate = ref('')
 const endDate = ref('')
 const minStars = ref(0)
+const errorMessage = ref('')
 
-const emit = defineEmits(['search'])
+const emit = defineEmits(['search']);
+
+const validateDates = () => {
+  if (!startDate.value || !endDate.value) {
+    errorMessage.value = 'Start Date and End Date both are required inputs'
+    return false
+  }
+  
+  if (new Date(startDate.value) > new Date(endDate.value)) {
+    errorMessage.value = 'Start date cannot be after end date.'
+    return false
+  }
+
+  errorMessage.value = ''
+  
+  return true
+}
 
 const filteredLanguages = computed(() => {
   if (!languageInput.value) return []
@@ -126,11 +147,13 @@ const removeLanguage = (lang: string) => {
 }
 
 const handleSubmit = () => {
-  emit('search', {
-    languages: selectedLanguages.value,
-    startDate: startDate.value,
-    endDate: endDate.value,
-    minStars: minStars.value
-  })
+  if (validateDates()) {
+    emit('search', {
+      languages: selectedLanguages.value,
+      startDate: startDate.value,
+      endDate: endDate.value,
+      minStars: minStars.value
+    })
+  }
 }
 </script>
