@@ -66,3 +66,8 @@ npm run dev
 ## Notes
 
 Lots to improve but it works. Main focus was on functionality over polish. Used Tailwind for quick styling.
+
+
+## Updating the Date Validation and video for the same.
+
+Recording of the changes - `https://1drv.ms/v/s!AooCtUkx8GfxhZw-yKF4Q9kVZzgDvA?e=9Q6dq8` 
